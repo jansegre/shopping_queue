@@ -1,0 +1,28 @@
+\chapter{Formulação do problema}
+O objetivo deste trabalho é encontrar o número ótimo
+de caixas que permitam que um supermercado não tenham filas
+com tamanho maior que 5 pessoas. São consideradas duas estruturas
+para resolução do problema. Na primeira as filas dos caixas são
+independentes, e os clientes entram no caixa de menor fila.
+Na segunda, os caixas possuem uma fila comum, assim como em um
+caixa rápido.
+
+Para cada um dos casos são apresentados a fila média máxima em cada
+caso, o tempo médio de permanência no supermercado, o número mínimo
+de caixas para atingir o objetivo desejado.
+
+Restrições do problema:
+\begin{itemize}
+  \item O supermercado funciona 8 horas por dia e tem $n>2$ caixas
+  \item Chegadas dos clientes é Poisson de média 10 por minuto
+  \item Tempo de atendimento no caixa é Uniforme entre 2 e 6 minutos
+  \item Tempo de compra de cada cliente é Uniforme entre 30 e 90 minutos
+\end{itemize}
+
+\chapter{Resultados}\label{cap:resul}
+O problema descrito anteriormente foi simulado em \textit{python}. Os resultados
+da simulação são apresentados na tabela \ref{tab:resul_5}.
+
+\input{doc/tables.tex}
+
+% vim: tw=80 et ts=2 sw=2 sts=2

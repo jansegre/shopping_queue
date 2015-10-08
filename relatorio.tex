@@ -1,0 +1,471 @@
+\documentclass[
+  % -- opções da classe memoir --
+  12pt,				% tamanho da fonte
+  %openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+  %twoside,			% para impressão em verso e anverso. Oposto a oneside
+  oneside,			% para impressão em verso e anverso. Oposto a oneside
+  a4paper,			% tamanho do papel. 
+  % -- opções da classe abntex2 --
+  %chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+  %section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+  %subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+  %subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+  % -- opções do pacote babel --
+  english,			% idioma adicional para hifenização
+  brazil,				% o último idioma é o principal do documento
+  % -- opções da classe ime-abntex2 --
+  %brasao,
+]{ime-abntex2}
+
+
+% ---
+% PACOTES
+% ---
+
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{float}                    % For improved placement of figures
+\usepackage{placeins}                 % Keeps floats 'in their place' with \FloatBarrier
+\usepackage{cmap}                     % Mapear caracteres especiais no PDF
+\usepackage{lmodern}                  % Usa a fonte Latin Modern
+\usepackage{amsmath}                  % Para usar blocos como "gather" de escrever matemática
+%\usepackage{amsfonts}                 % Para usar fontes ams
+%\usepackage{times}                    % Usa a fonte Times
+\usepackage[T1]{fontenc}              % Selecao de codigos de fonte.
+%\usepackage{lastpage}                 % Usado pela Ficha catalográfica
+\usepackage{indentfirst}              % Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}                    % Controle das cores
+\usepackage[table]{xcolor}            % Controle das cores em uma tabela
+\usepackage{graphicx}                 % Inclusão de gráficos
+\usepackage[portuguese]{algorithm2e}  % Para escrever algorítimos
+\usepackage{lscape}                   % Para usar landscape
+\usepackage{amsthm}                   % Para usar Definições e lemas
+\usepackage{amssymb}                  % \mathbb{•}
+\usepackage{caption}                  % dependencia de subcaption
+%\usepackage{subcaption}               % Para usar \begin{subfigure} e colocar figuras (a) e (b) lado a lado
+\usepackage{listings}                 % Para usar \lstinputlisting e incluir código
+\newtheorem{teo}{Teorema}[section]    % Renomear o comando
+\newtheorem{defi}[teo]{Definição}
+% o seguinte é necessário para corrigir um bug no algorithm2e
+% http://tex.stackexchange.com/questions/113325/problem-with-algorithm2e-and-portuguese-option
+\SetKwFor{Para}{para}{fa\c{c}a}{fimpara}
+\SetKwBlock{Inicio}{início}{fim}
+% não era pra precisar do seguinte, mas precisa para traduzir a captions dos algoritmos
+\renewcommand{\algorithmcfname}{Algoritmo}%
+% ---
+
+% ---
+% Pacotes de citacoes
+% ---
+% O seguinte serve para mostrar as referencias reversas na bibliografia
+% \usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
+\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+
+% --- 
+% CONFIGURAÇÕES DE PACOTES
+% --- 
+
+% ----
+% Configuração LISTING
+% ----
+\def\lstlistingname{Arquivo}
+\lstset{                      % general command to set parameter(s)
+  basicstyle=\footnotesize,   % print whole listing small. Possible values:
+                              %   \footnotesize, \small, \itshape, \ttfamily
+  keywordstyle=\color{black}\bfseries\underbar,
+                              % underlined bold black keywords
+  identifierstyle=,           % nothing happens
+  commentstyle=\color{white}, % white comments
+  stringstyle=\ttfamily,      % typewriter type for strings
+  showstringspaces=false      % no special string spaces
+}
+
+
+% ---
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+%\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+%\renewcommand{\backref}{}
+% Define os textos da citação
+%\renewcommand*{\backrefalt}[4]{
+%	\ifcase #1 %
+%		Nenhuma citação no texto.%
+%	\or
+%		Citado na página #2.%
+%	\else
+%		Citado #1 vezes nas páginas #2.%
+%	\fi}%
+% ---
+
+% as imagens ficam nesse diretório
+\graphicspath{{img/}}
+
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+\titulo{Determinação do Número Ótimo de Caixas de Um Supermercado}
+\autor{Jan Segre\\Victor Bramigk}
+\local{Rio de Janeiro}
+\data{Outubro de 2015}
+\orientador{TC Salles}{Ph.D., do IME}
+\instituicao{%
+  Instituto Militar de Engenharia
+  \par
+  Seção de Computação
+  \par
+  Graduação em Engenharia de Computação
+}
+\tipotrabalho{Simulação}
+% O preambulo deve conter o tipo do trabalho, o objetivo,
+% o nome da instituição e a área de concentração 
+\preambulo{Trabalho da Disciplina de Simulação e Análise de Desempenho do Curso
+  de Graduação em Engenharia de Computação do Instituto Militar de Engenharia.}
+% ---
+
+
+% ---
+% Configurações de aparência do PDF final
+
+% alterando o aspecto da cor azul
+%\definecolor{blue}{RGB}{41,5,195}
+\definecolor{blue}{RGB}{0,0,0}
+
+% informações do PDF
+\makeatletter
+\hypersetup{%
+  %pagebackref=true,
+  pdftitle={\@title},
+  pdfauthor={\@author},
+  pdfsubject={\imprimirpreambulo},
+  pdfcreator={LaTeX with abnTeX2},
+  pdfkeywords={ime}{robocup}{analise}{logs}{rede neural},
+  colorlinks=true,		% false: boxed links; true: colored links
+  linkcolor=blue,			% color of internal links
+  citecolor=blue,			% color of links to bibliography
+  filecolor=magenta,		% color of file links
+  urlcolor=blue,
+  bookmarksdepth=4
+}
+\makeatother
+% ---
+
+% ---
+% Espaçamentos entre linhas e parágrafos 
+% ---
+
+% O tamanho do parágrafo é dado por:
+%\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+%\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+\setlength{\parskip}{\onelineskip}
+
+% ---
+% compila o indice
+% ---
+\makeindex
+% ---
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+% Retira espaço extra obsoleto entre as frases.
+%\frenchspacing
+
+% ----------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS
+% ----------------------------------------------------------
+% \pretextual
+
+% ---
+% Capa
+% ---
+\imprimircapa
+%\input{pre_textuais/capa}
+% ---
+
+% ---
+% Folha de rosto
+% (o * indica que haverá a ficha bibliográfica)
+% ---
+%\imprimirfolhaderosto*
+%\input{pre_textuais/folha_de_rosto}
+% ---
+
+% ---
+% Inserir a ficha bibliografica
+% ---
+
+% Isto é um exemplo de Ficha Catalográfica, ou ``Dados internacionais de
+% catalogação-na-publicação''. Você pode utilizar este modelo como referência. 
+% Porém, provavelmente a biblioteca da sua universidade lhe fornecerá um PDF
+% com a ficha catalográfica definitiva após a defesa do trabalho. Quando estiver
+% com o documento, salve-o como PDF no diretório do seu projeto e substitua todo
+% o conteúdo de implementação deste arquivo pelo comando abaixo:
+%
+% \begin{fichacatalografica}
+%     \includepdf{fig_ficha_catalografica.pdf}
+% \end{fichacatalografica}
+%\imprimirfichacatalografica
+%{629.892}
+%{S455h}
+%{Segre, Jan}
+%{Projeto de Fim de Curso (PFC)}
+%{%
+%  1. Curso de engenharia da computação - Projeto Final de Curso.
+%  2. Robótica.
+%  3. Minimax.
+%  I. Bramigk, Victor.
+%  II. Rosa, Paulo Fernando Ferreira.
+%  III. Bruno Eduardo Madeira.
+%  IV. \@title.
+%  V. Instituto Militar de Engenharia.
+%}
+%{Técnicas de IA aplicadas a sistemas multiagentes cooperativos e
+%competitivos}
+% ---
+
+% ---
+% Inserir errata
+% ---
+%\begin{errata}
+%Elemento opcional da \citeonline[4.2.1.2]{NBR14724:2011}. Exemplo:
+%
+%\vspace{\onelineskip}
+%
+%FERRIGNO, C. R. A. \textbf{Tratamento de neoplasias ósseas apendiculares com
+%reimplantação de enxerto ósseo autólogo autoclavado associado ao plasma
+%rico em plaquetas}: estudo crítico na cirurgia de preservação de membro em
+%cães. 2011. 128 f. Tese (Livre-Docência) - Faculdade de Medicina Veterinária e
+%Zootecnia, Universidade de São Paulo, São Paulo, 2011.
+%
+%\begin{table}[htb]
+%\center
+%\footnotesize
+%\begin{tabular}{|p{1.4cm}|p{1cm}|p{3cm}|p{3cm}|}
+%  \hline
+%   \textbf{Folha} & \textbf{Linha}  & \textbf{Onde se lê}  & \textbf{Leia-se}  \\
+%    \hline
+%    1 & 10 & auto-conclavo & autoconclavo\\
+%   \hline
+%\end{tabular}
+%\end{table}
+%
+%\end{errata}
+% ---
+
+% ---
+% Inserir folha de aprovação
+% ---
+%
+% Isto é um exemplo de Folha de aprovação, elemento obrigatório da NBR
+% 14724/2011 (seção 4.2.1.3). Você pode utilizar este modelo até a aprovação
+% do trabalho. Após isso, substitua todo o conteúdo deste arquivo por uma
+% imagem da página assinada pela banca com o comando abaixo:
+%
+% \includepdf{folhadeaprovacao_final.pdf}
+%
+%\convidadoum{Bruno Eduardo Madeira}{M.Sc., do IME}
+%\convidadodois{Julio Cesar Duarte}{D.Sc., do IME}
+%\imprimirfolhadeaprovacao{18 de novembro de 2014}
+% ---
+
+% ---
+% Dedicatória
+% ---
+%\begin{dedicatoria}
+%   \vspace*{\fill}
+%   \centering
+%   \noindent
+%   \textit{ Este trabalho é dedicado às crianças adultas que,\\
+%   quando pequenas, sonharam em se tornar cientistas.} \vspace*{\fill}
+%\end{dedicatoria}
+% ---
+
+% ---
+% Agradecimentos
+% ---
+%\begin{agradecimentos}
+%Os agradecimentos principais são direcionados à Gerald Weber, Miguel Frasson,
+%Leslie H. Watter, Bruno Parente Lima, Flávio de Vasconcellos Corrêa, Otavio Real
+%Salvador, Renato Machnievscz\footnote{Os nomes dos integrantes do primeiro
+%projeto abn\TeX\ foram extraídos de
+%\url{http://codigolivre.org.br/projects/abntex/}} e todos aqueles que
+%contribuíram para que a produção de trabalhos acadêmicos conforme
+%as normas ABNT com \LaTeX\ fosse possível.
+%
+%Agradecimentos especiais são direcionados ao Centro de Pesquisa em Arquitetura
+%da Informação\footnote{\url{http://www.cpai.unb.br/}} da Universidade de
+%Brasília (CPAI), ao grupo de usuários
+%\emph{latex-br}\footnote{\url{http://groups.google.com/group/latex-br}} e aos
+%novos voluntários do grupo
+%\emph{\abnTeX}\footnote{\url{http://groups.google.com/group/abntex2} e
+%\url{http://abntex2.googlecode.com/}}~que contribuíram e que ainda
+%contribuirão para a evolução do \abnTeX.
+%
+%\end{agradecimentos}
+% ---
+
+% ---
+% Epígrafe
+% ---
+%\begin{epigrafe}
+%    \vspace*{\fill}
+%	\begin{flushright}
+%		\textit{``Não vos amoldeis às estruturas deste mundo, \\
+%		mas transformai-vos pela renovação da mente, \\
+%		a fim de distinguir qual é a vontade de Deus: \\
+%		o que é bom, o que Lhe é agradável, o que é perfeito.\\
+%		(Bíblia Sagrada, Romanos 12, 2)}
+%	\end{flushright}
+%\end{epigrafe}
+% ---
+
+% ---
+% RESUMOS
+% ---
+%\input{doc/resumo}
+
+% ---
+% inserir o sumario
+% ---
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de ilustrações
+% ---
+%\pdfbookmark[0]{\listfigurename}{lof}
+%\listoffigures*
+%\cleardoublepage
+% ---
+
+% ---
+% inserir lista de tabelas
+% ---
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de abreviaturas e siglas
+% ---
+%\begin{siglas}
+%  \item[IA] Inteligência Artificial
+%  \item[SSL] \textit{Small Size League}
+%  \item[Robocup] \textit{Robotics World Cup}
+%  \item[RoboIME] Equipe de alunos do Laboratório de Robótica do IME
+%\end{siglas}
+% ---
+
+% ---
+% inserir lista de símbolos
+% ---
+%\begin{simbolos}
+%  \item[$ \Gamma $] Letra grega Gama
+%  \item[$ \Lambda $] Lambda
+%  \item[$ \zeta $] Letra grega minúscula zeta
+%  \item[$ \in $] Pertence
+%\end{simbolos}
+% ---
+
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+% ----------------------------------------------------------
+% Introdução
+% ----------------------------------------------------------
+\input{doc/intro.tex}
+
+% FIXME: FALTOU A SEÇÃO DE REVISÃO DE LITERATURA???
+
+% Desenvolvimento
+% ---------------
+% intro
+
+\input{doc/desenvolvimento.tex}
+\input{doc/conclusao.tex}
+
+% ---
+% Finaliza a parte no bookmark do PDF, para que se inicie o bookmark na raiz
+% ---
+\bookmarksetup{startatroot}%
+% ---
+
+%\addcontentsline{toc}{chapter}{Conclusão}
+%\input{partes/conclusao}
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+
+% ----------------------------------------------------------
+% Referências bibliográficas
+% ----------------------------------------------------------
+%\bibliographystyle{plainnat}%abbrvnat, unsrtnat, apsrev, rmpaps, IEEEtranN, achemso, rsc
+%\bibliography{referencias}
+
+% ----------------------------------------------------------
+% Glossário
+% ----------------------------------------------------------
+%
+% Consulte o manual da classe abntex2 para orientações sobre o glossário.
+%
+%\glossary
+
+% ----------------------------------------------------------
+% Apêndices
+% ----------------------------------------------------------
+
+% ---
+% Inicia os apêndices
+% ---
+%\begin{apendicesenv}
+
+% Imprime uma página indicando o início dos apêndices
+%\partapendices
+
+% ----------------------------------------------------------
+%\chapter{Quisque libero justo}
+% ----------------------------------------------------------
+%\end{apendicesenv}
+% ---
+
+
+% ----------------------------------------------------------
+% Anexos
+% ----------------------------------------------------------
+
+% ---
+% Inicia os anexos
+% ---
+%\begin{anexosenv}
+
+% Imprime uma página indicando o início dos anexos
+%\partanexos
+
+% ---
+%\chapter{Morbi ultrices rutrum lorem.}
+% ---
+
+%\end{anexosenv}
+
+%---------------------------------------------------------------------
+% INDICE REMISSIVO
+%---------------------------------------------------------------------
+
+\printindex
+
+\end{document}
+% vim: tw=80 et ts=2 sw=2 sts=2
