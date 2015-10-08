@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 from enum import Enum
 from random import choice
+from math import erf
 
 
 Event = Enum('Event', 'client_arrive client_buy cashier_finish')
+
+def phi(x):
+    return (1.0 + erf(x / sqrt(2.0))) / 2.0
 
 
 class Simulation(object):
@@ -54,6 +58,9 @@ class Simulation(object):
         s['avg_queue_time'] = aqt = sum(qd) / len(qd)
         s['max_queue_time'] = max(qd)
         s['dev_queue_time'] = sqrt(sum((aqt - d) ** 2 for d in qd) / len(qd))
+        # TODO: use inverse of phi function to compute 1.96 value bellow
+        # phi(1.96) = 0.975 ==> 95% confidence (*)
+        s['confd_rng_queue_time'] = 2 * 1.96 * s['avg_queue_time'] / sqrt(len(qd))
 
         ts = s['timestamps']
         qs = s['queue_sizes']
@@ -62,16 +69,22 @@ class Simulation(object):
         s['dev_queue_size'] = sqrt(sum((aqs - q) ** 2 / len(qq) for qq in qs for q in qq) / len(qs))
         s['avg_queue_size_each'] = tuple(sum((t1 - t0) * q for q, t0, t1 in izip(qq, ts, ts[1:])) / (ts[-1] - ts[0]) for qq in izip(*qs))
         s['max_queue_size_each'] = tuple(max(qq) for qq in izip(*qs))
+        # 95% confidence range (vide *)
+        s['confd_rng_queue_size'] = 2 * 1.96 * s['avg_queue_size'] / sqrt(len(qs))
 
         td = [h[3] - h[0] for h in s['client_history'].itervalues() if 0 in h and 3 in h]
         s['avg_total_time'] = att = sum(td) / len(td)
         s['max_total_time'] = max(td)
         s['dev_total_time'] = sqrt(sum((att - d) ** 2 for d in td) / len(td))
+        # 95% confidence range (vide *)
+        s['confd_rng_total_time'] = 2 * 1.96 * s['avg_total_time'] / sqrt(len(td))
 
         cd = [h[3] - h[2] for h in s['client_history'].itervalues() if 2 in h and 3 in h]
         s['avg_cashr_time'] = act = sum(cd) / len(cd)
         s['max_cashr_time'] = max(cd)
         s['dev_cashr_time'] = sqrt(sum((act - d) ** 2 for d in cd) / len(cd))
+        # 95% confidence range (vide *)
+        s['confd_rng_cashr_time'] = 2 * 1.96 * s['avg_cashr_time'] / sqrt(len(cd))
 
     def _log(self, msg):
         if self._log_fun is not None:
@@ -166,6 +179,7 @@ class Simulation(object):
         return '\n'.join([
             '',
             'avg queue size: {}'.format(s['avg_queue_size']),
+            '95% confd rang: {}'.format(s['confd_rng_queue_size']),
             'max queue size: {}'.format(s['max_queue_size']),
             'dev queue size: {}'.format(s['dev_queue_size']),
             '',
@@ -173,14 +187,17 @@ class Simulation(object):
             'max queue size each: {}'.format(', '.join('% 4i' % m for m in s['max_queue_size_each'])),
             '',
             'avg queue time: {}'.format(s['avg_queue_time']),
+            '95% confd rang: {}'.format(s['confd_rng_queue_time']),
             'max queue time: {}'.format(s['max_queue_time']),
             'dev queue time: {}'.format(s['dev_queue_time']),
             '',
             'avg total time: {}'.format(s['avg_total_time']),
+            '95% confd rang: {}'.format(s['confd_rng_total_time']),
             'max total time: {}'.format(s['max_total_time']),
             'dev total time: {}'.format(s['dev_total_time']),
             '',
             'avg cashr time: {}'.format(s['avg_cashr_time']),
+            '95% confd rang: {}'.format(s['confd_rng_cashr_time']),
             'max cashr time: {}'.format(s['max_cashr_time']),
             'dev cashr time: {}'.format(s['dev_cashr_time']),
             '',
