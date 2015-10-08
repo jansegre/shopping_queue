@@ -49,15 +49,27 @@ class Simulation(object):
         from itertools import izip
         from math import sqrt
         s = self._stats
-        deltas = [h[2] - h[1] for h in s['client_history'].itervalues() if 2 in h and 1 in h]
-        s['avg_queue_time'] = at = sum(deltas) / len(deltas)
-        s['max_queue_time'] = max(deltas)
-        s['dev_queue_time'] = sqrt(sum((at - d) ** 2 for d in deltas) / len(deltas))
+
+        qd = [h[2] - h[1] for h in s['client_history'].itervalues() if 1 in h and 2 in h]
+        s['avg_queue_time'] = aqt = sum(qd) / len(qd)
+        s['max_queue_time'] = max(qd)
+        s['dev_queue_time'] = sqrt(sum((aqt - d) ** 2 for d in qd) / len(qd))
+
         ts = s['timestamps']
         qs = s['queue_sizes']
-        s['avg_queue_size'] = aq = sum((t1 - t0) * sum(q) / len(q) for q, t0, t1 in izip(qs, ts, ts[1:])) / (ts[-1] - ts[0])
+        s['avg_queue_size'] = aqs = sum((t1 - t0) * sum(q) / len(q) for q, t0, t1 in izip(qs, ts, ts[1:])) / (ts[-1] - ts[0])
         s['max_queue_size'] = max(q for qq in qs for q in qq)
-        s['dev_queue_size'] = sqrt(sum((aq - q) ** 2 / len(qq) for qq in qs for q in qq) / len(qs))
+        s['dev_queue_size'] = sqrt(sum((aqs - q) ** 2 / len(qq) for qq in qs for q in qq) / len(qs))
+
+        td = [h[3] - h[0] for h in s['client_history'].itervalues() if 0 in h and 3 in h]
+        s['avg_total_time'] = att = sum(td) / len(td)
+        s['max_total_time'] = max(td)
+        s['dev_total_time'] = sqrt(sum((att - d) ** 2 for d in td) / len(td))
+
+        cd = [h[3] - h[2] for h in s['client_history'].itervalues() if 2 in h and 3 in h]
+        s['avg_cashr_time'] = act = sum(cd) / len(cd)
+        s['max_cashr_time'] = max(cd)
+        s['dev_cashr_time'] = sqrt(sum((act - d) ** 2 for d in cd) / len(cd))
 
     def _log(self, msg):
         if self._log_fun is not None:
@@ -150,12 +162,23 @@ class Simulation(object):
     def short_stats(self):
         s = self._stats
         return '\n'.join([
-            'avg queue time: {}'.format(s['avg_queue_time']),
-            'max queue time: {}'.format(s['max_queue_time']),
-            'dev queue time: {}'.format(s['dev_queue_time']),
+            '',
             'avg queue size: {}'.format(s['avg_queue_size']),
             'max queue size: {}'.format(s['max_queue_size']),
             'dev queue size: {}'.format(s['dev_queue_size']),
+            '',
+            'avg queue time: {}'.format(s['avg_queue_time']),
+            'max queue time: {}'.format(s['max_queue_time']),
+            'dev queue time: {}'.format(s['dev_queue_time']),
+            '',
+            'avg total time: {}'.format(s['avg_total_time']),
+            'max total time: {}'.format(s['max_total_time']),
+            'dev total time: {}'.format(s['dev_total_time']),
+            '',
+            'avg cashr time: {}'.format(s['avg_cashr_time']),
+            'max cashr time: {}'.format(s['max_cashr_time']),
+            'dev cashr time: {}'.format(s['dev_cashr_time']),
+            '',
         ])
 
 
