@@ -46,8 +46,11 @@ class Simulation(object):
         s['buy_zone_sizes'].append(len(self.buy_zone))
 
     def _compute_stats(self):
-        # TODO: compute statistics, mainly average time on queue
-        pass
+        s = self._stats
+        deltas = [h[2] - h[1] for h in s['client_history'].itervalues() if 2 in h and 1 in h]
+        s['avg_queue_time'] = sum(deltas) / len(deltas)
+        s['max_queue_time'] = max(deltas)
+        s['max_queue_size'] = max(q for qq in s['queue_sizes'] for q in qq)
 
     def _log(self, msg):
         if self._log_fun is not None:
@@ -135,6 +138,15 @@ class Simulation(object):
         #while self.time_left > 0 or self.days_left > 0:
         while self.days_left >= 0:
             self.step()
+        self._compute_stats()
+
+    def short_stats(self):
+        s = self._stats
+        return '\n'.join([
+            'avg queue time: {}'.format(s['avg_queue_time']),
+            'max queue time: {}'.format(s['max_queue_time']),
+            'max queue size: {}'.format(s['max_queue_size']),
+        ])
 
 
 if __name__ == '__main__':
@@ -147,6 +159,7 @@ if __name__ == '__main__':
     parser.add_argument('cashiers', default=4, type=int, help='number of cashiers')
     parser.add_argument('-f', '--client-frequency', default=10.0, type=float, help='frequency of clients per minute')
     parser.add_argument('-d', '--days', default=1, type=int, help='number of days to simulate')
+    parser.add_argument('-e', '--export-stats', type=argparse.FileType('w'), help='set the file to export statistics in JSON to')
     parser.add_argument('--log', action='store_true', help='whether we should log the events')
     args = parser.parse_args()
 
@@ -158,5 +171,14 @@ if __name__ == '__main__':
     lg = args.log and (lambda timestamp, message: sys.stderr.write('{t:09.03f}: {msg}\n'.format(t=timestamp, msg=message))) or None
 
     s = Simulation(n=cashiers_count, at=arrive_time, ct=cashier_time, bt=buy_time, mx=5, log=lg)
-    s.simulate(args.days)
-    print 'TODO: print short statistics' # TODO
+    try:
+        print 'Simulating ... ',
+        sys.stdout.flush()
+        s.simulate(args.days)
+        print 'done.'
+        print s.short_stats()
+        if args.export_stats:
+            from json import dump
+            dump(s._stats, args.export_stats, indent=2, separators=(',', ': '))
+    except KeyboardInterrupt:
+        print '\rCancelled.         '
