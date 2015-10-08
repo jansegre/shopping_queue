@@ -46,11 +46,14 @@ class Simulation(object):
         s['buy_zone_sizes'].append(len(self.buy_zone))
 
     def _compute_stats(self):
+        from itertools import izip
         s = self._stats
         deltas = [h[2] - h[1] for h in s['client_history'].itervalues() if 2 in h and 1 in h]
         s['avg_queue_time'] = sum(deltas) / len(deltas)
         s['max_queue_time'] = max(deltas)
         s['max_queue_size'] = max(q for qq in s['queue_sizes'] for q in qq)
+        ts = s['timestamps']
+        s['avg_queue_size'] = sum((t1 - t0) * sum(q) / len(q) for q, t0, t1 in izip(s['queue_sizes'], ts, ts[1:])) / (ts[-1] - ts[0])
 
     def _log(self, msg):
         if self._log_fun is not None:
@@ -145,6 +148,7 @@ class Simulation(object):
         return '\n'.join([
             'avg queue time: {}'.format(s['avg_queue_time']),
             'max queue time: {}'.format(s['max_queue_time']),
+            'avg queue size: {}'.format(s['avg_queue_size']),
             'max queue size: {}'.format(s['max_queue_size']),
         ])
 
