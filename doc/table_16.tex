@@ -1,28 +1,60 @@
 \begin{table}[ht]
   \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|c|c|c|}
+      \hline
+      \rowcolor[gray]{.8}
+      Nº caixa & Tamanho médio fila & Tamanho máximo fila \\
+      \hline
+      % data
+         1     &    1.97            &   5                 \\ \hline
+         2     &    2.00            &   5                 \\ \hline
+         3     &    1.98            &   5                 \\ \hline
+         4     &    2.00            &   5                 \\ \hline
+         5     &    2.01            &   5                 \\ \hline
+         6     &    2.00            &   5                 \\ \hline
+         7     &    1.97            &   5                 \\ \hline
+         8     &    2.02            &   5                 \\ \hline
+         9     &    2.00            &   5                 \\ \hline
+         10    &    2.01            &   5                 \\ \hline
+         11    &    1.98            &   5                 \\ \hline
+         12    &    2.04            &   5                 \\ \hline
+         13    &    1.95            &   5                 \\ \hline
+         14    &    2.01            &   5                 \\ \hline
+         15    &    2.01            &   5                 \\ \hline
+         16    &    2.00            &   5                 \\ \hline
+    \end{tabular}
+  }
+  \caption{Tamanhos das filas da simulação para 16 caixas.\label{tab:resul_16}}
+\end{table}
+
+\begin{table}[ht]
+  \resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|c|c|c|}
       \hline
       \rowcolor[gray]{.8}
-      Nº caixa & $l_{med}$ fila & $t_{med}$ supermercado & $t_{med}$ fila & $t_{max}$ fila \\
+      Atributo & Média & Intervalo de 95\%  & Valor máximo & Desvio padrão \\
+      \rowcolor[gray]{.8}
+               &       & de confiança média &              &               \\
       \hline
       % data
-         1     &                &                        &                &                \\ \hline
-         2     &                &                        &                &                \\ \hline
-         3     &                &                        &                &                \\ \hline
-         4     &                &                        &                &                \\ \hline
-         5     &                &                        &                &                \\ \hline
-         6     &                &                        &                &                \\ \hline
-         7     &                &                        &                &                \\ \hline
-         8     &                &                        &                &                \\ \hline
-         9     &                &                        &                &                \\ \hline
-         10    &                &                        &                &                \\ \hline
-         11    &                &                        &                &                \\ \hline
-         12    &                &                        &                &                \\ \hline
-         13    &                &                        &                &                \\ \hline
-         14    &                &                        &                &                \\ \hline
-         15    &                &                        &                &                \\ \hline
-         16    &                &                        &                &                \\ \hline
+      tamnho  & 1.9970173256 & 0.0408106485125 & 5 & 1.12059450319 \\
+      da fila &              &                 &   &               \\
+      \hline
+      tempo na & 176.028451546 & 6.38835933843 & 578.217984022 & 95.5067000839 \\
+      fila     &               &               &               &               \\
+      \hline
+      tempo no     & 3812.6051028  & 138.555796098 & 5744.61112761 & 1043.96715725 \\
+      supermercado &               &               &               &               \\
+      \hline
+      tempo no & 71.9041689924 & 2.61310550369 & 536.914559847 & 101.651982226 \\
+      caixa    &               &               &               &               \\
+      \hline
     \end{tabular}
   }
-  \caption{Resultado da simulação para 16 caixas.\label{tab:resul_16}}
+  \caption{Dados das filas da simulação para 16 caixas.\label{tab:other_resul_16}}
 \end{table}
+
+
+
+
+
