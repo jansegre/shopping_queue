@@ -43,3 +43,8 @@ Usando
                             set the file to export statistics in JSON to
       --log                 whether we should log the events
 
+
+Licensa
+-------
+
+[Unlicense](./UNLICENSE)
