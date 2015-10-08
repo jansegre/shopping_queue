@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from enum import Enum
 from random import choice
-from numpy import sqrt
 
 
 Event = Enum('Event', 'client_arrive client_buy cashier_finish')
@@ -48,18 +47,17 @@ class Simulation(object):
 
     def _compute_stats(self):
         from itertools import izip
+        from math import sqrt
         s = self._stats
         deltas = [h[2] - h[1] for h in s['client_history'].itervalues() if 2 in h and 1 in h]
-        s['avg_queue_time'] = sum(deltas) / len(deltas)
-        s['var_queue_time'] = 0
-        for i in deltas:
-          s['var_queue_time'] += (s['avg_queue_time'] - i) ** 2 / len(deltas)
-        s['var_queue_time'] = sqrt(s['var_queue_time'])
-
+        s['avg_queue_time'] = at = sum(deltas) / len(deltas)
         s['max_queue_time'] = max(deltas)
-        s['max_queue_size'] = max(q for qq in s['queue_sizes'] for q in qq)
+        s['dev_queue_time'] = sqrt(sum((at - d) ** 2 for d in deltas) / len(deltas))
         ts = s['timestamps']
-        s['avg_queue_size'] = sum((t1 - t0) * sum(q) / len(q) for q, t0, t1 in izip(s['queue_sizes'], ts, ts[1:])) / (ts[-1] - ts[0])
+        qs = s['queue_sizes']
+        s['avg_queue_size'] = aq = sum((t1 - t0) * sum(q) / len(q) for q, t0, t1 in izip(qs, ts, ts[1:])) / (ts[-1] - ts[0])
+        s['max_queue_size'] = max(q for qq in qs for q in qq)
+        s['dev_queue_size'] = sqrt(sum((aq - q) ** 2 / len(qq) for qq in qs for q in qq) / len(qs))
 
     def _log(self, msg):
         if self._log_fun is not None:
@@ -153,10 +151,11 @@ class Simulation(object):
         s = self._stats
         return '\n'.join([
             'avg queue time: {}'.format(s['avg_queue_time']),
-            'var queue time: {}'.format(s['var_queue_time']),
             'max queue time: {}'.format(s['max_queue_time']),
+            'dev queue time: {}'.format(s['dev_queue_time']),
             'avg queue size: {}'.format(s['avg_queue_size']),
             'max queue size: {}'.format(s['max_queue_size']),
+            'dev queue size: {}'.format(s['dev_queue_size']),
         ])
 
 
