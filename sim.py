@@ -60,6 +60,8 @@ class Simulation(object):
         s['avg_queue_size'] = aqs = sum((t1 - t0) * sum(q) / len(q) for q, t0, t1 in izip(qs, ts, ts[1:])) / (ts[-1] - ts[0])
         s['max_queue_size'] = max(q for qq in qs for q in qq)
         s['dev_queue_size'] = sqrt(sum((aqs - q) ** 2 / len(qq) for qq in qs for q in qq) / len(qs))
+        s['avg_queue_size_each'] = tuple(sum((t1 - t0) * q for q, t0, t1 in izip(qq, ts, ts[1:])) / (ts[-1] - ts[0]) for qq in izip(*qs))
+        s['max_queue_size_each'] = tuple(max(qq) for qq in izip(*qs))
 
         td = [h[3] - h[0] for h in s['client_history'].itervalues() if 0 in h and 3 in h]
         s['avg_total_time'] = att = sum(td) / len(td)
@@ -166,6 +168,9 @@ class Simulation(object):
             'avg queue size: {}'.format(s['avg_queue_size']),
             'max queue size: {}'.format(s['max_queue_size']),
             'dev queue size: {}'.format(s['dev_queue_size']),
+            '',
+            'avg queue size each: {}'.format(', '.join('%.02f' % s for s in s['avg_queue_size_each'])),
+            'max queue size each: {}'.format(', '.join('% 4i' % m for m in s['max_queue_size_each'])),
             '',
             'avg queue time: {}'.format(s['avg_queue_time']),
             'max queue time: {}'.format(s['max_queue_time']),
